@@ -19,7 +19,7 @@ Głównym założeniem projektu było stworzenie odizolowanego środowiska testo
 ### Etap 2: Konfiguracja Active Directory i struktury domeny
 #### 1. Instalacja AD DS i utworzenie domeny `homelab.local`
 Po zainstalowaniu roli **Active Directory Domain Services (AD DS)** oraz **DNS Server** na `DC-LAB` promowałem maszynę do roli kontrolera nowej domeny `homelab.local`:
-![Widok nowej domeny homelab.local w ADUC](screenshots/01-dc-ad-ds.png)
+![Widok nowej domeny homelab.local w ADUC](Screenshots/01-dc-ad-ds.png)
 #### 2. Organizacja struktury jednostek organizacyjnych (OU)
 Aby zachować przejrzystość spotykaną w środowiskach firmowych i ułatwić późniejsze delegowanie uprawnień oraz przypisywanie polityk grupowych (GPO), utworzyłem nadrzędną jednostkę organizacyjną `Corp` i podzieliłem ją na trzy kontenery: `Users`, `Groups` oraz `Workstations`:
 ![Struktura jednostek organizacyjnych Corp](screenshots/02-dc-ad-ds.png)
