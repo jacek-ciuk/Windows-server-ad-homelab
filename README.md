@@ -72,6 +72,7 @@ We właściwościach konta `Jacek Ciuk` w zakładce **Account** zaznaczyłem **U
 Utworzyłem i podpiąłem politykę `Corp-Workstations-Logon-Banner` do jednostki organizacyjnej `Corp/Workstations`, konfigurując w sekcji `Security Options` treść oraz nagłówek komunikatu wyświetlanego przed zalogowaniem na stacje robocze:
 
 ![Konfiguracja baneru logowania w Group Policy Management Editor](Screenshots/12-dc-ad-ds.png)
+
 Po odświeżeniu zasad (`gpupdate /force`) i wylogowaniu/restarcie na stacji `W10-LAB` komunikat pojawia się przed ekranem uwierzytelniania użytkownika:
 
 ![Baner informacyjny przed logowaniem na stacji W10-LAB](Screenshots/13-dc-ad-ds.png)
