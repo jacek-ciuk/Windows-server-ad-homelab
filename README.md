@@ -55,7 +55,7 @@ Po wpisaniu hasła tymczasowego na stacji `W10-LAB` system wymusił ustawienie n
 ---
 ### Etap 5: Polityka blokady konta i obsługa blokady przez Helpdesk
 #### 1. Konfiguracja progu blokady w Default Domain Policy
-W **Default Domain Policy** (`Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Account Policies -> Account Lockout Policy`) ustawiłem próg **3 nieudanych prób logowania** (*Account lockout threshold = 3*) z automatycznym czasem blokady i resetu licznika na 30 minut
+W **Default Domain Policy** (`Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Account Policies -> Account Lockout Policy`) ustawiłem próg **3 nieudanych prób logowania** (*Account lockout threshold = 3*) z automatycznym czasem blokady i resetu licznika na 30 minut.
 
 ![Konfiguracja blokady konta w Default Domain Policy](Screenshots/09-dc-ad-ds.png)
 #### 2. Blokada konta na stacji roboczej po błędnych próbach logowania
