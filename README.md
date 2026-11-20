@@ -48,6 +48,7 @@ Po restarcie stacji roboczej zalogowałem się na konto domenowe `homelab\jacekc
 W konsoli **Active Directory Users and Computers** (`Corp/Users`) zresetowałem hasło dla konta `Jacek Ciuk` z zaznaczoną opcją **User must change password at next logon**:
 
 ![Okno Reset Password z wymuszeniem zmiany hasła](Screenshots/07-dc-ad-ds.png).
+
 Po wpisaniu hasła tymczasowego na stacji `W10-LAB` system wymusił ustawienie nowego hasła przed zalogowaniem na pulpit:
 
 ![Ekran wymuszenia zmiany hasła na W10-LAB](Screenshots/08-dc-ad-ds.png)
@@ -58,6 +59,7 @@ W **Default Domain Policy** (`Computer Configuration -> Policies -> Windows Sett
 
 ![Konfiguracja blokady konta w Default Domain Policy](Screenshots/09-dc-ad-ds.png)
 #### 2. Blokada konta na stacji roboczej po błędnych próbach logowania
+
 Po trzykrotnym podaniu błędnego hasła dla konta `Jacek Ciuk` na `W10-LAB` system zablokował dalsze logowanie
 
 ![Komunikat o zablokowanym koncie na W10-LAB](Screenshots/10-dc-ad-ds.png)
