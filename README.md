@@ -19,46 +19,59 @@ Głównym założeniem projektu było stworzenie odizolowanego środowiska testo
 ### Etap 2: Konfiguracja Active Directory i struktury domeny
 #### 1. Instalacja AD DS i utworzenie domeny `homelab.local`
 Po zainstalowaniu roli **Active Directory Domain Services (AD DS)** oraz **DNS Server** na `DC-LAB` promowałem maszynę do roli kontrolera nowej domeny `homelab.local`:
+
 ![Widok nowej domeny homelab.local w ADUC](Screenshots/01-dc-ad-ds.png)
 #### 2. Organizacja struktury jednostek organizacyjnych (OU)
 Aby zachować przejrzystość spotykaną w środowiskach firmowych i ułatwić późniejsze delegowanie uprawnień oraz przypisywanie polityk grupowych (GPO), utworzyłem nadrzędną jednostkę organizacyjną `Corp` i podzieliłem ją na trzy kontenery: `Users`, `Groups` oraz `Workstations`:
+
 ![Struktura jednostek organizacyjnych Corp](Screenshots/02-dc-ad-ds.png)
 #### 3. Utworzenie konta użytkownika i grupy bezpieczeństwa
 W kontenerze `Corp/Users` założyłem konto domenowe (`Jacek Ciuk`), a następnie przypisałem je do utworzonej w `Corp/Groups` grupy bezpieczeństwa `IT-Support` – zgodnie z dobrą praktyką nadawania uprawnień przez grupy zamiast pojedynczych kont:
+
 ![Grupa IT-Support i przypisany użytkownik](Screenshots/03-dc-ad-ds.png)
 ---
 ### Etap 3: Podłączenie stacji klienckiej Windows 10 (`W10-LAB`) do domeny
 #### 1. Weryfikacja łączności sieciowej i DNS
 Przed dołączeniem klienta do domeny sprawdziłem komunikację z kontrolerem (`192.168.56.10`) za pomocą polecenia `ping` oraz poprawność rozwiązywania nazwy domeny `homelab.local` przez `nslookup`:
+
 ![Test łączności i DNS z poziomu klienta](Screenshots/04-dc-ad-ds.png)
 #### 2. Dołączenie stacji `W10-LAB` i przeniesienie do `Corp/Workstations`
 Po zmianie nazwy hosta na `W10-LAB` i wpięciu maszyny w domenę `homelab.local` przeniosłem obiekt komputera z domyślnego kontenera `Computers` do jednostki organizacyjnej `Corp/Workstations`:
+
 ![Stacja W10-LAB w jednostce Corp/Workstations](Screenshots/05-dc-ad-ds.png)
 #### 3. Test logowania kontem domenowym
 Po restarcie stacji roboczej zalogowałem się na konto domenowe `homelab\jacekciuk` i zweryfikowałem poprawność kontekstu użytkownika (`whoami`) oraz przynależność stacji do domeny (`systeminfo`):
+
 ![Weryfikacja logowania domenowego na W10-LAB](Screenshots/06-dc-ad-ds.png)
 ---
 ### Etap 4: Resetowanie hasła i wymuszenie zmiany przy logowaniu
 W konsoli **Active Directory Users and Computers** (`Corp/Users`) zresetowałem hasło dla konta `Jacek Ciuk` z zaznaczoną opcją **User must change password at next logon**:
+
 ![Okno Reset Password z wymuszeniem zmiany hasła](Screenshots/07-dc-ad-ds.png).
 Po wpisaniu hasła tymczasowego na stacji `W10-LAB` system wymusił ustawienie nowego hasła przed zalogowaniem na pulpit:
+
 ![Ekran wymuszenia zmiany hasła na W10-LAB](Screenshots/08-dc-ad-ds.png)
 ---
 ### Etap 5: Polityka blokady konta i obsługa blokady przez Helpdesk
 #### 1. Konfiguracja progu blokady w Default Domain Policy
 W **Default Domain Policy** (`Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Account Policies -> Account Lockout Policy`) ustawiłem próg **3 nieudanych prób logowania** (*Account lockout threshold = 3*) z automatycznym czasem blokady i resetu licznika na 30 minut
+
 ![Konfiguracja blokady konta w Default Domain Policy](Screenshots/09-dc-ad-ds.png)
 #### 2. Blokada konta na stacji roboczej po błędnych próbach logowania
 Po trzykrotnym podaniu błędnego hasła dla konta `Jacek Ciuk` na `W10-LAB` system zablokował dalsze logowanie
+
 ![Komunikat o zablokowanym koncie na W10-LAB](Screenshots/10-dc-ad-ds.png)
 #### 3. Odblokowanie konta w ADUC
 We właściwościach konta `Jacek Ciuk` w zakładce **Account** zaznaczyłem **Unlock account**, aby odblokować konto i przywrócić możliwość logowania:
+
 ![Odblokowanie konta w zakładce Account w ADUC](Screenshots/11-dc-ad-ds.png)
 ---
 ### Etap 6: Pierwsza własna polityka GPO — baner informacyjny na stacjach roboczych
 Utworzyłem i podpiąłem politykę `Corp-Workstations-Logon-Banner` do jednostki organizacyjnej `Corp/Workstations`, konfigurując w sekcji `Security Options` treść oraz nagłówek komunikatu wyświetlanego przed zalogowaniem na stacje robocze:
+
 ![Konfiguracja baneru logowania w Group Policy Management Editor](Screenshots/12-dc-ad-ds.png)
 Po odświeżeniu zasad (`gpupdate /force`) i wylogowaniu/restarcie na stacji `W10-LAB` komunikat pojawia się przed ekranem uwierzytelniania użytkownika:
+
 ![Baner informacyjny przed logowaniem na stacji W10-LAB](Screenshots/13-dc-ad-ds.png)
 ### Uwagi dotyczące środowiska testowego
 Środowisko zostało uruchomione jako odizolowana sieć wewnętrzna w Oracle VirtualBox bez dostępu do zewnętrznych serwerów NTP. W takich warunkach próba wymuszenia synchronizacji czasu na stacji klienckiej (np. poleceniem `w32tm /resync /force`) może zwracać komunikat o braku dostępnych danych czasu (`no time data was available`), co wynika ze specyfiki odizolowanego laboratorium bez zewnętrznego źródła czasu.
